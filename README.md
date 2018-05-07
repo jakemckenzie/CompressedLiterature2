@@ -1,4 +1,6 @@
 # CompressedLiterature2
+This is a joint project between Bruce Taiga Baker and Jake McKenzie for our data structures course.
+
 Our instructor a large collection of raw text files of famous literature, including Leo Tolstoy’s War and Peace consisting of over 3 million characters and about 22000 different words (counting differences in capitalization), and he’d like to store these works more efficiently. David Huffman developed a very efficient method for compressing data based on character frequency in a message. We applied this method in a straightforward way in Assignment 3 to compress the literature but our instructor has a better idea on how to apply Huffman’s encoding.
 
 Since all the literature in my collection is in the English language it is reasonable to suppose
