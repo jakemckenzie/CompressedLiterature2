@@ -124,8 +124,8 @@ public class MyHashTable<K, V> {
             hash += (hash << 0xF);
             return hash;
         }
-      public int djb2(K key) {
-            String word = key.toString();
+      public int djb2(int key) {
+            String word = String.valueOf(key);
             int hash = 0;
             for (int i = 0; i < word.length(); i++) {
                 hash = word.charAt(i) + ((hash << 5) - hash);
@@ -134,14 +134,14 @@ public class MyHashTable<K, V> {
       }
       public int FNVHash1(K key) { 
             String data = key.toString();
-            final int p = 16777619; 
-            int hash = (int) 2166136261L; 
+            final int p = 0x1000193; 
+            int hash = -0x7EE3623B; 
             for (int i = 0; i < data.length(); i++) hash = (hash ^ data.charAt(i)) * p; 
-            hash += hash << 13; 
-            hash ^= hash >> 7; 
-            hash += hash << 3; 
-            hash ^= hash >> 17; 
-            hash += hash << 5; 
+            hash ^= hash << 13; 
+            hash += hash >> 7; 
+            hash ^= hash << 3; 
+            hash += hash >> 17; 
+            hash ^= hash << 5;
             return hash; 
       }
 

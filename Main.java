@@ -19,15 +19,16 @@ public class Main {
      * 
      * @param args The command line arguments
      * 
-     * Hash function | runtime @ 100      | runtime @ 1000 
-     * joaat_hash    | 780.12 miliseconds | 758.844 miliseconds
-     * bernsteinHash | 752.74 miliseconds | 755.924 miliseconds
-     * djb2          | 669.31 miliseconds | 694.176 miliseconds
-     * FNVHash1      | 673.94 miliseconds | 662.069 miliseconds
+     * Hash function |   runtime @ 100    | runtime @ 1000 
+     * joaat_hash    | 756.94 miliseconds |
+     * bernsteinHash | 784.33 miliseconds |
+     * djb2          | 727.71 miliseconds |
+     * FNVHash1      | 659.09 miliseconds |
      */
     public static void main(String[] args) throws IOException {
-        long[] runtime = new long[1000];
-        for (int i = 0; i < 1000; i++) {
+        int cap = 100;
+        long[] runtime = new long[cap];
+        for (int i = 0; i < cap; i++) {
             Long startTime = System.currentTimeMillis();
             testMain();
             Long endTime = System.currentTimeMillis();
@@ -35,7 +36,7 @@ public class Main {
         }
         double total = 0;
         for (long d : runtime) total+= (double)d;
-        System.out.println(total / 1000 + " miliseconds");
+        System.out.println(total / cap + " miliseconds");
         }
 
         // it = wordSet.iterator();
