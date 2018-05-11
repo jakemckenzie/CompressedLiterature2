@@ -19,14 +19,14 @@ public class Main {
      * 
      * @param args The command line arguments
      * 
-     * Hash function |   runtime @ 100    | runtime @ 1000 
-     * joaat_hash    | 756.94 miliseconds |
-     * bernsteinHash | 784.33 miliseconds |
-     * djb2          | 727.71 miliseconds |
-     * FNVHash1      | 659.09 miliseconds |
+     *             Hash function | runtime @ 100      | runtime @ 1000 
+     *             joaat_hash    | 727.7 miliseconds  | 
+     *             bernsteinHash | 770.71 miliseconds | 
+     *             djb2          | 723.08 miliseconds | 
+     *             FNVHash1      | 666.53 miliseconds |
      */
     public static void main(String[] args) throws IOException {
-        int cap = 100;
+        int cap = 1000;
         long[] runtime = new long[cap];
         for (int i = 0; i < cap; i++) {
             Long startTime = System.currentTimeMillis();
@@ -35,14 +35,13 @@ public class Main {
             runtime[i] = (endTime - startTime);
         }
         double total = 0;
-        for (long d : runtime) total+= (double)d;
+        for (long d : runtime) total += (double) d;
         System.out.println(total / cap + " miliseconds");
-        }
+    }
 
-        // it = wordSet.iterator();
-        // while (it.hasNext()) System.out.println(temp.get(it.next()));
-        // testMyHashTable();
-    
+    // it = wordSet.iterator();
+    // while (it.hasNext()) System.out.println(temp.get(it.next()));
+    // testMyHashTable();
 
     public static void testMyHashTable() {
         MyHashTable<String, String> temp = new MyHashTable<String, String>(1 << 15);
@@ -54,7 +53,7 @@ public class Main {
     }
 
     public static void testMain() throws IOException {
-        
+
         String s = new String(Files.readAllBytes(Paths.get(WarAndPeace)));
         String[] words = s.split("([^\\w\\Q-\\E\\Q'\\E])+");
         String[] seperators = s.split("([\\w\\Q-\\E\\Q'\\E])+");
@@ -65,9 +64,9 @@ public class Main {
 
         Collections.addAll(wordSet, words);
         Collections.addAll(wordSet, seperators2);
-            //System.out.println(wordSet.size());
+        // System.out.println(wordSet.size());
         MyHashTable<String, String> temp = new MyHashTable<String, String>(1 << 15);
-            // for (int i = 0; i < wordSet.size(); i++) temp.put(wordSet.);
+        // for (int i = 0; i < wordSet.size(); i++) temp.put(wordSet.);
         Iterator<String> it = wordSet.iterator();
         while (it.hasNext()) {
             String bob = it.next();

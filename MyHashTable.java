@@ -1,5 +1,5 @@
 import java.util.*;
-// cd C:\Users\Epimetheus\Documents\Data Structures\Assignment4
+// cd C:\Users\Epimetheus\Documents\GitHub\CompressedLiterature2
 // javac *.java -Xlint
 public class MyHashTable<K, V> {
       int myEntryCount;
@@ -37,23 +37,44 @@ public class MyHashTable<K, V> {
             //int t = joaat_hash(searchKey);
             //int t = djb2(searchKey);
             int t = FNVHash1(searchKey);
+            //int t = randomHash(searchKey);
             int pos = (t < 0) ? (t % myCapacity) + myCapacity : t % myCapacity;
             int cycle = 0;
                
-               if(!containsKey(searchKey)) {
+            if(!containsKey(searchKey)) {
                   while( cycle < myCapacity && myValues.get(pos) != null) {
                      pos = (pos + 1)%myCapacity;
                      cycle++;
-                  }
+            }
                   myKeys.set(myBuckets, new keyData(searchKey, pos));
                   myBuckets++;
                   myValues.set(pos, newValue);  
-               }else {
+            }else {
                   //this part needs work
                   myValues.set(getKeyData(searchKey).myValue,  newValue);
-               }
+            }
                 
-         }
+      }
+
+      public int randomHash(K searchKey) {
+            Random r = new Random(System.currentTimeMillis());
+            int t = searchKey.hashCode();
+            switch (r.nextInt(4)) {
+                  case 0: 
+                        t = bernsteinHash(searchKey);
+                        break;
+                  case 1: 
+                        t = joaat_hash(searchKey);
+                        break;
+                  case 2: 
+                        t = djb2(searchKey);
+                        break;
+                  case 3: 
+                        t = FNVHash1(searchKey);
+                        break;                        
+            }
+            return t;
+      }
 
       public V get(K searchKey) {
             // int t = bernsteinHash(searchKey);
@@ -124,7 +145,7 @@ public class MyHashTable<K, V> {
             hash += (hash << 0xF);
             return hash;
         }
-      public int djb2(int key) {
+      public int djb2(K key) {
             String word = String.valueOf(key);
             int hash = 0;
             for (int i = 0; i < word.length(); i++) {
@@ -151,16 +172,16 @@ public class MyHashTable<K, V> {
             label:
             for (int i = 0; i < myBuckets; i++) {
                   if (myKeys.get(random.get(i)).myKey.equals(searchKey)) {
-                        temp = myKeys.get(i);
+                  //if (myKeys.get(i).myKey.equals(searchKey)) {
+                        temp = myKeys.get(random.get(i));
                         break label;
                   }
             }
-
             return temp;
       }
 
-      public ArrayList<Integer> noRepeatShuffleList(int size) {
-            ArrayList<Integer> arr = new ArrayList<>();
+      private ArrayList<Integer> noRepeatShuffleList(int size) {
+            ArrayList<Integer> arr = new ArrayList<>(size);
             for (int i = 0; i < size; i++) {
                 arr.add(i);
             }
