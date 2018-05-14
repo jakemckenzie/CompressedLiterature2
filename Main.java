@@ -26,7 +26,7 @@ public class Main {
      *             FNVHash1      | 666.53 miliseconds |
      */
     public static void main(String[] args) throws IOException {
-        int cap = 1000;
+        int cap = 100;
         long[] runtime = new long[cap];
         for (int i = 0; i < cap; i++) {
             Long startTime = System.currentTimeMillis();
@@ -37,6 +37,7 @@ public class Main {
         double total = 0;
         for (long d : runtime) total += (double) d;
         System.out.println(total / cap + " miliseconds");
+        testMain();
     }
 
     // it = wordSet.iterator();
@@ -54,23 +55,38 @@ public class Main {
 
     public static void testMain() throws IOException {
 
-        String s = new String(Files.readAllBytes(Paths.get(WarAndPeace)));
-        String[] words = s.split("([^\\w\\Q-\\E\\Q'\\E])+");
-        String[] seperators = s.split("([\\w\\Q-\\E\\Q'\\E])+");
+        
+        // TreeMap<String,Integer> tm = new TreeMap<String,Integer>();
 
-        String[] seperators2 = (seperators.toString()).split("");
-
-        Set<String> wordSet = new HashSet<>();
-
-        Collections.addAll(wordSet, words);
-        Collections.addAll(wordSet, seperators2);
-        // System.out.println(wordSet.size());
-        MyHashTable<String, String> temp = new MyHashTable<String, String>(1 << 15);
-        // for (int i = 0; i < wordSet.size(); i++) temp.put(wordSet.);
-        Iterator<String> it = wordSet.iterator();
-        while (it.hasNext()) {
-            String bob = it.next();
-            temp.put(bob, bob);
+        // for (String i:strings) {
+        //     Integer j = tm.get(i);
+        //     tm.put(i,j == null ? 1 : j + 1);
+        // }
+    
+        Iterator<String> itrString =  setString.iterator();
+        while(itrString.hasNext()){
+            String a = itrString.next();            
+            System.out.println(a+ " :  "+Collections.frequency(strings, a));
         }
+
+
+
+        // for (int i = 0; i < strings.size(); i++) {
+        //     System.out.println(strings.get(i));
+        // }
+
+
+        // Set<String> wordSet = new HashSet<>();
+        //if (s.charAt(0) == "([\\w\\Q-\\E\\Q'\\E])+")
+        // Collections.addAll(wordSet, words);
+        // Collections.addAll(wordSet, seperatorsSeperated);
+        // System.out.println(wordSet.size());
+        // MyHashTable<String, String> temp = new MyHashTable<String, String>(1 << 15);
+        // // for (int i = 0; i < wordSet.size(); i++) temp.put(wordSet.);
+        // Iterator<String> it = wordSet.iterator();
+        // while (it.hasNext()) {
+        //     String bob = it.next();
+        //     temp.put(bob, bob);
+        // }
     }
 }
