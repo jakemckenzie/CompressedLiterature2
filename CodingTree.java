@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.*;
 import java.nio.file.Paths;
 import java.nio.file.Files;
+import java.util.Map.Entry;
 //cd C:\Users\Epimetheus\Documents\GitHub\CompressedLiterature2
 //javac *.java -Xlint:unchecked
 
@@ -30,7 +31,7 @@ public class CodingTree {
         buildHuffmanTree(queue);
         buildBinary(root,"");
         convertToBinary();
-        //decoded = decode(bits,codes);
+        decoded = decode(bits,codes);
     }
     /**
      * @param root the root to the Huffman Tree.
@@ -75,29 +76,29 @@ public class CodingTree {
      * @param codes A map of characters in the message with their binary codes.
      */
 
-    // public String decode(String bits, MyHashTable<String,String> codes) {
-    //     StringBuilder out = new StringBuilder();
-    //     StringBuilder temp = new StringBuilder();
-    //     //String temp = "";
-    //     //HuffmanNode decNode = root;
-    //     Map<String,Character> decoder = new HashMap<String,Character>();
-    //     Collection<Character> keys = codes.keySet();
-    //     for (char k: keys) decoder.put(codes.get(k),k);
-    //     for (int i = 0; i < bits.length(); i++) {
-    //         //temp += (bits.charAt(i) == '1') ? '1' : '0';            
-    //         if (bits.charAt(i) == '1') {
-    //             temp.append('1');
-    //         } else {
-    //             temp.append('0');
-    //         }
-    //         if (decoder.get(temp.toString()) != null) {
-    //             out.append(decoder.get(temp.toString()));
-    //             //temp = new StringBuilder();
-    //             temp.setLength(0);//faster than making a new object apparently?
-    //         }
-    //     }
-    //     return out.toString();
-    // }
+    public String decode(String bits, MyHashTable<String,String> codes) {
+        StringBuilder out = new StringBuilder();
+        StringBuilder temp = new StringBuilder();
+        //String temp = "";
+        //HuffmanNode decNode = root;
+        Map<String,String> decoder = new HashMap<String,String>();
+        Collection<String> keys = codes.keySet();
+        for (String k: keys) decoder.put(codes.get(k),k);
+        for (int i = 0; i < bits.length(); i++) {
+            //temp += (bits.charAt(i) == '1') ? '1' : '0';            
+            if (bits.charAt(i) == '1') {
+                temp.append('1');
+            } else {
+                temp.append('0');
+            }
+            if (decoder.get(temp.toString()) != null) {
+                out.append(decoder.get(temp.toString()));
+                //temp = new StringBuilder();
+                temp.setLength(0);//faster than making a new object apparently?
+            }
+        }
+        return out.toString();
+    }
     /**
      * Builds a Huffman tree given some weights and an alphabet.
      * @param queue A priority queue of huffman nodes
@@ -115,7 +116,7 @@ public class CodingTree {
             buildBinary(node.R,temp + '1');
             buildBinary(node.L,temp + '0');
         } else {
-            codes.put((String)node.key,temp);
+            codes.put(node.key,temp);
         } 
     }
 
@@ -182,6 +183,6 @@ public class CodingTree {
             Integer j = tm.get(i);
             tm.put(i,j == null ? 1 : j + 1);
         }
-        for (Map.Entry m : tm.entrySet()) queue.offer(new HuffmanNode((String)m.getKey(),(int)m.getValue()));
+        for (Map.Entry<String,Integer> m : tm.entrySet()) queue.offer(new HuffmanNode(m.getKey(),m.getValue()));
     }
 }

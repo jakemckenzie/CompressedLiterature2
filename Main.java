@@ -5,12 +5,37 @@ import java.io.*;
 import java.lang.*;
 
 public class Main {
+
+    /**
+     * @param WarAndPeace- This was the required text for compression. It is
+     * a long text and showcases the compression technique well. I consider compression
+     * of this text to be the baseline to meet. If I can hit this then I will test on
+     * progressively harder texts to compress and decompress.
+     */
+
     private static final String WarAndPeace = "WarAndPeace.txt";
+
+    /**
+     * @param codes an output file for the codes
+     */
+
     private static final String codes = "./codes.txt";
+
+    /**
+     * @param compressed a compressed output file for the codes
+     */
 
     private static final String compressed = "./compressed.txt";
 
+    /**
+     * @param decompressed a compressed output file for the codes
+     */
+    private static final String decompressed = "./decompressed.txt";
     
+    /**
+     * @param targetCompressed our instructor's target file size
+     */
+    private static final String targetCompressed = "./targetCompressed.txt";
     /**
      * The driver for the MyHashMap method reads in a file and writes the coded file
      * and the tree codes
@@ -24,28 +49,25 @@ public class Main {
      *             FNVHash1      | 666.53 miliseconds |
      */
     public static void main(String[] args) throws IOException {
-        // int cap = 100;
-        // long[] runtime = new long[cap];
-        // for (int i = 0; i < cap; i++) {
-        //     Long startTime = System.currentTimeMillis();
-        //     testMain();
-        //     Long endTime = System.currentTimeMillis();
-        //     runtime[i] = (endTime - startTime);
-        // }
-        // double total = 0;
-        // for (long d : runtime) total += (double) d;
-        // System.out.println(total / cap + " miliseconds");
-        // testMain();
         long a = System.currentTimeMillis();
         String message = new String(Files.readAllBytes(Paths.get(WarAndPeace)));
-        //System.out.println("message Done");
         CodingTree c = new CodingTree(message);
+        c.codes.stats();
         Files.write(Paths.get(codes), c.codes.toString().getBytes());
         BitSet bs = new BitSet(c.bits.length());
         for (int o = 0; o < c.bits.length(); o++) if (c.bits.charAt(o) == '1') bs.flip(o);
         Files.write(Paths.get(compressed), bs.toByteArray());
         long b = System.currentTimeMillis();
-        System.out.println(b - a);
+        System.out.println("Runtime : " + (b - a) + " miliseconds");
+        Files.write(Paths.get(decompressed),c.decoded.getBytes());
+
+        double compressed = Files.size(Paths.get("compressed.txt"));
+        double targetCompressed = Files.size(Paths.get("targetCompressed.txt"));
+        double difference = (targetCompressed - compressed);
+
+        System.out.println("Compressed file size: " +  compressed + " bytes");
+        System.out.println("Target compressed file size: " +  targetCompressed  + " bytes");
+        System.out.println("Difference in compressed file sizes of my file vs the target: " + difference  + " bytes");
     }
 
     public static void testMyHashTable() {
