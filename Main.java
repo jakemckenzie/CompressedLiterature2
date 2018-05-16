@@ -33,10 +33,6 @@ public class Main {
     private static final String decompressed = "./decompressed.txt";
     
     /**
-     * @param targetCompressed our instructor's target file size
-     */
-    private static final String targetCompressed = "./targetCompressed.txt";
-    /**
      * The driver for the MyHashMap method reads in a file and writes the coded file
      * and the tree codes
      * 

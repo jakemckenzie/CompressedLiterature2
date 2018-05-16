@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 
 /**
  * @author Jake McKenzie
+ * @author Bruce Baker
  */
 public class CodingTree {
     /**
