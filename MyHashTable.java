@@ -12,7 +12,7 @@ public class MyHashTable<K, V> {
             myTable = new ArrayList<ValueData>(Collections.nCopies(capacity, null));
             myEntryCount = 0;
             myBuckets = 0;
-            myCapacity = capacity - 1;
+            myCapacity = capacity;
       }
 
       // public void put(K searchKey, V newValue) {
@@ -138,7 +138,60 @@ public class MyHashTable<K, V> {
             }
             return found;
       }
-
+   public HashSet<K> keySet() {
+      HashSet<K> temp = new HashSet<K>();
+      for(int i = 0; i < myCapacity; i++) {
+         if(myTable.get(i) != null) {
+            temp.add(myTable.get(i).myKey);
+         }
+      }
+      return temp;
+   }
+   
+   
+   void stats() {
+      System.out.println( "Number of Entries: " + (myBuckets));
+      System.out.println( "Number of Buckets : " + myCapacity);
+      ArrayList<Integer> histy = new ArrayList<Integer>(myCapacity);
+      int bigProbe = 1;
+      double averageProbe = 0;
+      for(int i = 0; i < myCapacity; i++) {
+         if(myTable.get(i) != null) {
+            int temp = i - (FNVHash1(myTable.get(i).myKey));
+            //System.out.println(temp);
+            if(temp < 0) {
+               temp = temp + myCapacity;
+            }
+            if(temp > bigProbe) {
+               bigProbe = temp;
+            }
+            averageProbe += ((double) temp) / myBuckets;
+            histy.add(temp);
+            
+         }
+      }
+      //System.out.println("BIGGEST PROBE " + bigProbe);
+      int[] probeCount = new int[bigProbe + 1];
+      for(int i = 0; i < histy.size(); i++) {
+         probeCount[histy.get(i)]++;
+      }
+      
+      System.out.println("Histogram of Probes: " + Arrays.toString(probeCount));
+      double fill = ((double)myBuckets) / myCapacity;
+      System.out.println("Fill Percentage: " + fill);
+      System.out.println("Max Linear Probe: " + bigProbe);
+      System.out.println("Average Linear Probe: " + averageProbe);
+   
+   }
+   private int hash(K key) {
+      int hash = key.hashCode();
+      if( hash < 0) { 
+               hash = hash % (myCapacity);
+               hash += myCapacity;
+            }
+            hash = hash % (myCapacity);
+      return hash;
+   }
       public String toString() {
             StringBuilder temp = new StringBuilder();
             temp.append("{");
@@ -168,6 +221,11 @@ public class MyHashTable<K, V> {
             String s = (String) key;
             for (i = 0; i < s.length(); ++i)
                   hash = 33 * hash + s.charAt(i);
+            if( hash < 0) { 
+               hash = hash % (myCapacity);
+               hash += myCapacity;
+            }
+            hash = hash % (myCapacity);
             return hash;
       }
 
@@ -183,6 +241,11 @@ public class MyHashTable<K, V> {
             hash += (hash << 0x3);
             hash ^= (hash >>> 0xB);
             hash += (hash << 0xF);
+            if( hash < 0) { 
+               hash = hash % (myCapacity);
+               hash += myCapacity;
+            }
+            hash = hash % (myCapacity);
             return hash;
       }
 
@@ -192,6 +255,11 @@ public class MyHashTable<K, V> {
             for (int i = 0; i < word.length(); i++) {
                   hash = word.charAt(i) + ((hash << 5) - hash);
             }
+            if( hash < 0) { 
+               hash = hash % (myCapacity);
+               hash += myCapacity;
+            }
+            hash = hash % (myCapacity);
             return hash;
       }
 
@@ -205,6 +273,11 @@ public class MyHashTable<K, V> {
             hash ^= hash << 3;
             hash += hash >> 17;
             hash ^= hash << 5;
+            if( hash < 0) { 
+               hash = hash % (myCapacity);
+               hash += myCapacity;
+            }
+            hash = hash % (myCapacity);
             return hash;
       }
 

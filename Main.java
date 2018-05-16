@@ -40,12 +40,13 @@ public class Main {
         String message = new String(Files.readAllBytes(Paths.get(WarAndPeace)));
         //System.out.println("message Done");
         CodingTree c = new CodingTree(message);
+        c.codes.stats();
         Files.write(Paths.get(codes), c.codes.toString().getBytes());
         BitSet bs = new BitSet(c.bits.length());
         for (int o = 0; o < c.bits.length(); o++) if (c.bits.charAt(o) == '1') bs.flip(o);
         Files.write(Paths.get(compressed), bs.toByteArray());
         long b = System.currentTimeMillis();
-        System.out.println(b - a);
+        System.out.println("Runtime : " + (b - a) + "ms");
     }
 
     public static void testMyHashTable() {

@@ -115,7 +115,7 @@ public class CodingTree {
             buildBinary(node.R,temp + '1');
             buildBinary(node.L,temp + '0');
         } else {
-            codes.put((String)node.key,temp);
+            codes.put(node.key,temp);
         } 
     }
 
