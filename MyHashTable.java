@@ -1,16 +1,43 @@
+/*
+ * MyHashTable.java
+ *
+ * TCSS 342
+ * Assignment 6
+ */
+
 import java.util.*;
+
+/**
+ * This is a Hash Table class. It stores data as an object
+ * with both its key and the data in the object.  The table
+ * is typically navigated with hash codes to pooint us to where
+ * we need to be in the hash table.
+ * @author Bruce Baker and Jake Macaroni
+ * @version May 16, 2018
+ */
 
 // cd C:\Users\Epimetheus\Documents\GitHub\CompressedLiterature2
 // javac *.java -Xlint
 public class MyHashTable<K, V> {
-      int myEntryCount;
+      /**
+       * This is the amount of occupied buckets in the hash table 
+       */
       int myBuckets;
+      /**
+       * This is the amount of total buckets in the hash table 
+       */
       int myCapacity;
+      /**
+       * This is the hash table 
+       */
       ArrayList<ValueData> myTable;
-
+      /**
+       * The constructor for a hash table.  initializes capacity amount of spaces
+       * to null in an arraylist
+       * @param capacity The size of the table
+       */
       public MyHashTable(int capacity) {
             myTable = new ArrayList<ValueData>(Collections.nCopies(capacity, null));
-            myEntryCount = 0;
             myBuckets = 0;
             myCapacity = capacity;
       }
@@ -54,7 +81,11 @@ public class MyHashTable<K, V> {
 
       // }
 
-
+      /**
+       * Places a value into the table based on the hashcode of the key
+       * @param searchKey the key of the object
+       * @param newValue the value to be associated
+       */
       void put(K searchKey, V newValue) {
             //int t = bernsteinHash(searchKey);
             //int t = joaat_hash(searchKey);
@@ -73,7 +104,7 @@ public class MyHashTable<K, V> {
                myBuckets++;
                myTable.set(pos, new ValueData(newValue, searchKey));  
          }
-
+      
       public int randomHash(K searchKey) {
             Random r = new Random(System.currentTimeMillis());
             int t = searchKey.hashCode();
@@ -93,7 +124,11 @@ public class MyHashTable<K, V> {
             }
             return t;
       }
-
+      /**
+       * This returns an value from our hastable that is associated with the key
+       * @param searchKey The key we are using to search the table
+       * @return The value associated with the key
+       */
       public V get(K searchKey) {
             //int t = bernsteinHash(searchKey);
             //int t = joaat_hash(searchKey);
@@ -115,7 +150,11 @@ public class MyHashTable<K, V> {
             return temp;
          }
 
-      
+      /**
+       * Looks for a key in the table, if it is present on the table, we return true
+       * @param
+       * @return
+       */
       public boolean containsKey(K searchKey) {
             //int t = bernsteinHash(searchKey);
             //int t = joaat_hash(searchKey);
@@ -138,6 +177,10 @@ public class MyHashTable<K, V> {
             }
             return found;
       }
+   /**
+    * Returns a hashset of all key values
+    * @return all keys in the table
+    */
    public HashSet<K> keySet() {
       HashSet<K> temp = new HashSet<K>();
       for(int i = 0; i < myCapacity; i++) {
@@ -148,7 +191,10 @@ public class MyHashTable<K, V> {
       return temp;
    }
    
-   
+   /**
+    * Prints the statistics on our hashing and probing methods
+    * to the console.
+    */
    void stats() {
       System.out.println( "Number of Entries: " + (myBuckets));
       System.out.println( "Number of Buckets : " + myCapacity);
@@ -293,12 +339,26 @@ public class MyHashTable<K, V> {
       // mapped to it,
       // so each key object needs to keep track of what its pointing to
       // the tostring should print like the map normally does
-
+      /**
+       * This is a private class that keeps track
+       * of which key is associated to the piece of data
+       */
       
       private class ValueData {
+            /**
+             * The value stored in the table
+             */
             V myValue;
+            /**
+             * The key stored in the table
+             */
             K myKey;
             
+            /**
+             * The constructor for a data node.
+             * @param theValue The value to be assigned
+             * @param theKey The key to be assigned
+             */
             ValueData(V theValue,K theKey) {
                myValue = theValue;
                myKey = theKey;
