@@ -16,7 +16,7 @@ import java.util.Map.Entry;
 
 /**
  * @author Jake McKenzie
- * @author Bruce Baker
+ * @author Bruce Taiga Baker
  */
 public class CodingTree {
     /**
@@ -27,12 +27,12 @@ public class CodingTree {
      */
 
     public CodingTree(String message) {
-        codes = new MyHashTable<String,String>(1 << 15);
+        codes = new MyHashTable<String,String>(32768);
         countStrings(message);
         buildHuffmanTree(queue);
         buildBinary(root,"");
         convertToBinary();
-        decoded = decode(bits,codes);
+        //decoded = decode(bits,codes);
     }
     /**
      * @param root the root to the Huffman Tree.

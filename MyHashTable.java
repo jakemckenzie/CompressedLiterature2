@@ -23,8 +23,20 @@ public class MyHashTable<K, V> {
       /**
        * @param myTable This is the hash table
        */
+      
       ArrayList<ValueData> myTable;
+      /**
+       * @param probingCount the count of the probes
+       */
+      int probingCount;
+      /**
+       * @param largestProbe the largest probe 
+       */
+      int largestProbe;
 
+      int[] squaresLookup = {1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225, 256, 289, 324, 361, 400, 441, 484, 529, 576, 625};
+
+      public ArrayList<Integer> histogram;
       /**
        * The constructor for a hash table. initializes capacity amount of spaces to
        * null in an arraylist
@@ -33,8 +45,11 @@ public class MyHashTable<K, V> {
        */
       public MyHashTable(int capacity) {
             myTable = new ArrayList<ValueData>(Collections.nCopies(capacity, null));
+            histogram = new ArrayList<Integer>(Collections.nCopies(capacity, 0));
             myEntryCount = 0;
             myBuckets = 0;
+            probingCount = 0;
+            largestProbe = 0;
             myCapacity = capacity;
       }
 
@@ -45,29 +60,37 @@ public class MyHashTable<K, V> {
        * @param newValue  the value to be associated
        */
       void put(K searchKey, V newValue) {
-            // int t = bernsteinHash(searchKey);
-            // int t = joaat_hash(searchKey);
-            // int t = djb2(searchKey);
-            int t = Fowler_Noll_Vo_hash(searchKey);
+            //int t = bernsteinHash(searchKey);
+            //int t = joaat_hash(searchKey);
+            int t = Fowler_Noll_Vo_hash(searchKey);           
+            //int t = hash(searchKey);
             int pos = (t < 0) ? (t % myCapacity) + myCapacity : t % myCapacity;
             int cycle = 0, i = 0, j = 0;
             while (cycle < myCapacity && myTable.get(pos) != null) {
                   if (myTable.get(pos).myKey.equals(searchKey)) {
                         break;
                   }
-                  pos = (pos + (int) Math.pow(++i, ++j)) % myCapacity;
+                  pos = (pos + 1) % myCapacity;
+                  //pos = quadraticProbe(pos,i,j);
+                  i++;
+                  j++;
                   pos = absHash(pos);
+                  probingCount++;
                   cycle++;
             }
+            
             myBuckets++;
+            largestProbe = (largestProbe < probingCount) ? probingCount : largestProbe;
+            histogram.set(probingCount,1+histogram.get(probingCount));
             myTable.set(pos, new ValueData(newValue, searchKey));
+            probingCount = 0;
       }
 
       public V get(K searchKey) {
-            // int t = bernsteinHash(searchKey);
-            // int t = joaat_hash(searchKey);
-            // int t = djb2(searchKey);
+            //int t = bernsteinHash(searchKey);
+            //int t = joaat_hash(searchKey);
             int t = Fowler_Noll_Vo_hash(searchKey);
+            //int t = hash(searchKey);
             int pos = (t < 0) ? (t % myCapacity) + myCapacity : t % myCapacity;
             int cycle = 0, i = 0, j = 0;
             V temp;
@@ -75,7 +98,10 @@ public class MyHashTable<K, V> {
                   if (myTable.get(pos).myKey.equals(searchKey)) {
                         break;
                   } else {
-                        pos = (pos + (int) Math.pow(++i, ++j)) % myCapacity;
+                        pos = (pos + 1) % myCapacity;
+                        //pos = quadraticProbe(pos,i,j);
+                        i++;
+                        j++;
                         pos = absHash(pos);
                   }
                   cycle++;
@@ -92,10 +118,10 @@ public class MyHashTable<K, V> {
        */
 
       public boolean containsKey(K searchKey) {
-            // int t = bernsteinHash(searchKey);
-            // int t = joaat_hash(searchKey);
-            // int t = djb2(searchKey);
+            //int t = bernsteinHash(searchKey);
+            //int t = joaat_hash(searchKey);
             int t = Fowler_Noll_Vo_hash(searchKey);
+            //int t = hash(searchKey);
             int pos = (t < 0) ? (t % myCapacity) + myCapacity : t % myCapacity;
             int cycle = 0;
             int i = 0, j = 0;
@@ -107,12 +133,19 @@ public class MyHashTable<K, V> {
                         found = true;
                         break;
                   } else {
-                        pos = (pos + (int) Math.pow(++i, ++j)) % myCapacity;
+                        pos = (pos + 1) % myCapacity;
+                        //pos = quadraticProbe(pos,i,j);
+                        i++;
+                        j++;
                         pos = absHash(pos);
                   }
                   cycle++;
             }
             return found;
+      }
+
+      public int quadraticProbe(int pos, int i, int j) {
+            return (i > 25) ? (pos + (int)Math.pow(i,j)) % myCapacity : (pos + squaresLookup[i]) % myCapacity;
       }
       /**
         * Returns a hashset of all key values
@@ -130,27 +163,15 @@ public class MyHashTable<K, V> {
       public void stats() {
             System.out.println("Number of Entries: " + (myBuckets));
             System.out.println("Number of Buckets : " + myCapacity);
-            ArrayList<Integer> histy = new ArrayList<Integer>(myCapacity);
-            int bigProbe = 1;
-            double averageProbe = 0;
-            for (int i = 0; i < myCapacity; i++) {
-                  if (myTable.get(i) != null) {
-                        int temp = i - (Fowler_Noll_Vo_hash(myTable.get(i).myKey));
-                        temp = (temp < 0) ? temp + myCapacity : temp;
-                        bigProbe = (temp > bigProbe) ? temp : bigProbe;
-                        averageProbe += ((double) temp) / myBuckets;
-                        histy.add(temp);
-                  }
-            }
-            int[] probeCount = new int[bigProbe + 1];
-            for (int i = 0; i < histy.size(); i++)
-                  probeCount[histy.get(i)]++;
+            int[] probeCount = new int[largestProbe + 1];
+            for (int i = 0; i < largestProbe + 1; i++) probeCount[i] = histogram.get(i);     
             System.out.println("Histogram of Probes: " + Arrays.toString(probeCount));
             double fill = ((double) myBuckets) / myCapacity;
             System.out.println("Fill Percentage: " + fill);
-            System.out.println("Max Linear Probe: " + bigProbe);
-            System.out.println("Average Linear Probe: " + averageProbe);
-
+            System.out.println("Max Linear Probe: " + largestProbe);
+            long sum = 0;
+            for (int i = 1; i < probeCount.length;i++) sum += i*probeCount[i];
+            System.out.println("Average Linear Probe: " + ((double)sum) / myBuckets);
       }
 
       private int hash(K key) {
@@ -186,11 +207,11 @@ public class MyHashTable<K, V> {
        * http://www.eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx
        */
       public int bernsteinHash(K key) {
-            int hash = 0;
             int i;
+            int hash = 0x1505;
             String s = (String) key;
-            for (i = 0; i < s.length(); ++i)
-                  hash = 33 * hash + s.charAt(i);
+            for (i = 0; i < s.length(); ++i) hash = 33 * hash + s.charAt(i);
+            hash &= 0x7fffffff;
             return absHash(hash);
       }
 
@@ -214,39 +235,31 @@ public class MyHashTable<K, V> {
       }
 
       /**
-       * http://www.cse.yorku.ca/~oz/hash.html
-       */
-
-      public int djb2(K key) {
-            String word = String.valueOf(key);
-            int hash = 0;
-            for (int i = 0; i < word.length(); i++)
-                  hash = word.charAt(i) + ((hash << 5) - hash);
-            // hash = ((hash < 0) ? (hash % (myCapacity)) + myCapacity : hash) % myCapacity;
-            return absHash(hash);
-      }
-
-      /**
        * https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
        */
       public int Fowler_Noll_Vo_hash(K key) {
             String data = key.toString();
             final int p = 0x1000193;
             int hash = -0x7EE3623B;
-            for (int i = 0; i < data.length(); i++)
-                  hash = (hash ^ data.charAt(i)) * p;
-            hash ^= hash << 0xD;
-            hash += hash >> 0x7;
-            hash ^= hash << 0x3;
-            hash += hash >> 0xD;
-            hash ^= hash << 0x5;
+            for (int i = 0; i < data.length(); i++) hash = (hash ^ data.charAt(i)) * p;
+            hash ^= hash << 13;
+            hash += hash >> 7;
+            hash ^= hash << 9;
+            hash += hash >> 13;
+            hash ^= hash << 5;
+
+            // hash += hash << 13;
+            // hash ^= hash >> 19;
+            // hash ^= hash >> 17;
+            // hash += hash << 11;
+
+
             return absHash(hash);
       }
 
       private ArrayList<Integer> noRepeatShuffleList(int size) {
             ArrayList<Integer> arr = new ArrayList<>(size);
-            for (int i = 0; i < size; i++)
-                  arr.add(i);
+            for (int i = 0; i < size; i++) arr.add(i);
             Collections.shuffle(arr);
             return arr;
       }

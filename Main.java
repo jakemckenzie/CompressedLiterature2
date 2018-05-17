@@ -38,7 +38,7 @@ public class Main {
      * 
      * @param args The command line arguments
      * 
-     *             Hash function | runtime @ 100      | runtime @ 1000 
+     *             Hash function | runtime @ 100      |
      *             joaat_hash    | 727.7 miliseconds  | 
      *             bernsteinHash | 770.71 miliseconds | 
      *             djb2          | 723.08 miliseconds | 
@@ -54,8 +54,8 @@ public class Main {
         for (int o = 0; o < c.bits.length(); o++) if (c.bits.charAt(o) == '1') bs.flip(o);
         Files.write(Paths.get(compressed), bs.toByteArray());
         long b = System.currentTimeMillis();
-        System.out.println("Runtime : " + (b - a) + " miliseconds");
-        Files.write(Paths.get(decompressed),c.decoded.getBytes());
+        System.out.println("Runtime: " + (b - a) + " milliseconds");
+        //Files.write(Paths.get(decompressed),c.decoded.getBytes());
 
         double compressed = Files.size(Paths.get("compressed.txt"));
         double targetCompressed = Files.size(Paths.get("targetCompressed.txt"));
@@ -64,6 +64,9 @@ public class Main {
         System.out.println("Compressed file size: " +  compressed + " bytes");
         System.out.println("Target compressed file size: " +  targetCompressed  + " bytes");
         System.out.println("Difference in compressed file sizes of my file vs the target: " + difference  + " bytes");
+
+
+        //testMyHashTable();
     }
 
     public static void testMyHashTable() {
