@@ -36,15 +36,8 @@ public class MyHashTable<K, V> {
       /**
        * @param squaresLookup the first 25 squares used as a lookup
        */
-      int[] squaresLookup = {1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225, 256, 
-                           289, 324, 361, 400, 441, 484, 529, 576, 625, 676, 729, 784, 841, 900, 
-                           961, 1024, 1089, 1156, 1225, 1296, 1369, 1444, 1521, 1600, 1681, 
-                          1764, 1849, 1936, 2025, 2116, 2209, 2304, 2401, 2500, 2601, 2704,
-                          2809, 2916, 3025, 3136, 3249, 3364, 3481, 3600, 3721, 3844, 3969,
-                          4096, 4225, 4356, 4489, 4624, 4761, 4900, 5041, 5184, 5329, 5476,
-                          5625, 5776, 5929, 6084, 6241, 6400, 6561, 6724, 6889, 7056, 7225,
-                          7396, 7569, 7744, 7921, 8100, 8281, 8464, 8649, 8836, 9025, 9216,
-                          9409, 9604, 9801, 10000};
+      int[] squaresLookup = {1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225, 256,
+                           289, 324, 361, 400, 441, 484, 529, 576};
       /**
        * @param histogram histogram for printing
        */
@@ -77,7 +70,7 @@ public class MyHashTable<K, V> {
             int t = Fowler_Noll_Vo_hash(searchKey);           
             //int t = hash(searchKey);
             int pos = (t < 0) ? (t % myCapacity) + myCapacity : t % myCapacity;
-            int cycle = 0, i = 0, j = 0;
+            int cycle = 0, i = 1, j = 1;
             while (cycle < myCapacity && myTable.get(pos) != null) {
                   if (myTable.get(pos).myKey.equals(searchKey)) {
                         break;
@@ -140,7 +133,7 @@ public class MyHashTable<K, V> {
             //int t = hash(searchKey);
             int pos = (t < 0) ? (t % myCapacity) + myCapacity : t % myCapacity;
             int cycle = 0;
-            int i = 0, j = 0;
+            int i = 1, j = 1;
             boolean found = false;
             while (cycle < myCapacity) {
                   if (myTable.get(pos) == null) {
@@ -161,7 +154,7 @@ public class MyHashTable<K, V> {
       }
 
       public int quadraticProbe(int pos, int i, int j) {
-            return (i > 100) ? (pos + (int)Math.pow(i,j)) % myCapacity : (pos + squaresLookup[i - 1]) % myCapacity;
+            return (i > 24) ? (pos + (int)Math.pow(i,j)) % myCapacity : (pos + squaresLookup[i - 1]) % myCapacity;
       }
       /**
         * Returns a hashset of all key values

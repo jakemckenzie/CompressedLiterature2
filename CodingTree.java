@@ -95,6 +95,8 @@ public class CodingTree {
 
         System.out.println(bits.length());
         for (int i = 0; i < bits.length(); i++) {
+            long sum = 0;
+            long z = System.nanoTime();
             //temp += (bits.charAt(i) == '1') ? '1' : '0';
             //System.out.println(i);
             if (bits.charAt(i) == '1') {
@@ -108,6 +110,9 @@ public class CodingTree {
                 temp.setLength(0);//faster than making a new object apparently?
                 //temp = "";
             }
+            long y = System.nanoTime();
+            sum+= (y-z);
+            if (i % 100000 == 0 )  System.out.println(sum);
         }
         return out.toString();
     }

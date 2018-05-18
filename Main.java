@@ -74,6 +74,29 @@ public class Main {
          * (2) Please comment out these functions to run tests
          */
 
+        
+        //testMyHashTable();
+        //testCodingTree();
+        runDecode();
+    }
+
+    public static void testMyHashTable() {
+        MyHashTable<String, String> temp = new MyHashTable<String, String>(1 << 15);
+        temp.put("yes", "please");
+        temp.put("No", "Bugs");
+        System.out.println(temp.get("yes") + temp.get("No"));
+        temp.put("yes", "What do you mean");
+        System.out.println(temp);
+    }
+
+    public static void testCodingTree() throws IOException{
+        String message1 = new String(Files.readAllBytes(Paths.get("Conan_Beyond_the_Black_River.txt")));
+        CodingTree testCodingTree1 = new CodingTree(message1);
+        System.out.println(testCodingTree1.codes.toString());
+
+    }
+
+    public static void runDecode() throws IOException{
         long y = System.currentTimeMillis();
         byte[] bytes = Files.readAllBytes(Paths.get("compressed.txt"));
         byte[] smallerBytes = new byte[bytes.length - 2];
@@ -107,29 +130,6 @@ public class Main {
 
         System.out.println();
         System.out.println(z - y + " milliseconds");
-        //testMyHashTable();
-        //testCodingTree();
-        runDecode();
-    }
-
-    public static void testMyHashTable() {
-        MyHashTable<String, String> temp = new MyHashTable<String, String>(1 << 15);
-        temp.put("yes", "please");
-        temp.put("No", "Bugs");
-        System.out.println(temp.get("yes") + temp.get("No"));
-        temp.put("yes", "What do you mean");
-        System.out.println(temp);
-    }
-
-    public static void testCodingTree() throws IOException{
-        String message1 = new String(Files.readAllBytes(Paths.get("Conan_Beyond_the_Black_River.txt")));
-        CodingTree testCodingTree1 = new CodingTree(message1);
-        System.out.println(testCodingTree1.codes.toString());
-
-    }
-
-    public static void runDecode() throws IOException{
-        
     }
 
 }
