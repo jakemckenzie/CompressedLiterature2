@@ -36,8 +36,18 @@ public class MyHashTable<K, V> {
       /**
        * @param squaresLookup the first 25 squares used as a lookup
        */
-      int[] squaresLookup = {1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225, 256, 289, 324, 361, 400, 441, 484, 529, 576, 625};
-
+      int[] squaresLookup = {1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225, 256, 
+                           289, 324, 361, 400, 441, 484, 529, 576, 625, 676, 729, 784, 841, 900, 
+                           961, 1024, 1089, 1156, 1225, 1296, 1369, 1444, 1521, 1600, 1681, 
+                          1764, 1849, 1936, 2025, 2116, 2209, 2304, 2401, 2500, 2601, 2704,
+                          2809, 2916, 3025, 3136, 3249, 3364, 3481, 3600, 3721, 3844, 3969,
+                          4096, 4225, 4356, 4489, 4624, 4761, 4900, 5041, 5184, 5329, 5476,
+                          5625, 5776, 5929, 6084, 6241, 6400, 6561, 6724, 6889, 7056, 7225,
+                          7396, 7569, 7744, 7921, 8100, 8281, 8464, 8649, 8836, 9025, 9216,
+                          9409, 9604, 9801, 10000};
+      /**
+       * @param histogram histogram for printing
+       */
       public ArrayList<Integer> histogram;
       /**
        * The constructor for a hash table. initializes capacity amount of spaces to
@@ -52,7 +62,7 @@ public class MyHashTable<K, V> {
             myBuckets = 0;
             probingCount = 0;
             largestProbe = 0;
-            myCapacity = capacity;//
+            myCapacity = capacity;
       }
 
       /**
@@ -87,7 +97,11 @@ public class MyHashTable<K, V> {
             myTable.set(pos, new ValueData(newValue, searchKey));
             probingCount = 0;
       }
-
+      /**
+       * Gets a value from the table based on the hashcode of the key
+       * 
+       * @param searchKey the key of the object
+       */
       public V get(K searchKey) {
             //int t = bernsteinHash(searchKey);
             //int t = joaat_hash(searchKey);
@@ -147,7 +161,7 @@ public class MyHashTable<K, V> {
       }
 
       public int quadraticProbe(int pos, int i, int j) {
-            return (i > 25) ? (pos + (int)Math.pow(i,j)) % myCapacity : (pos + squaresLookup[i - 1]) % myCapacity;
+            return (i > 100) ? (pos + (int)Math.pow(i,j)) % myCapacity : (pos + squaresLookup[i - 1]) % myCapacity;
       }
       /**
         * Returns a hashset of all key values
@@ -175,7 +189,9 @@ public class MyHashTable<K, V> {
             for (int i = 1; i < probeCount.length;i++) sum += i*probeCount[i];
             System.out.println("Average Probe: " + ((double)sum) / myBuckets);
       }
-
+      /**
+       * @param key key for hashing
+       */
       private int hash(K key) {
             int hash = key.hashCode();
             return absHash(hash);
@@ -213,6 +229,11 @@ public class MyHashTable<K, V> {
       }
 
       /**
+       * "Dan Bernstein created this algorithm and posted it in a newsgroup.
+       *  It is known by many as the Chris Torek hash because Chris went a 
+       * long way toward popularizing it. Since then it has been used 
+       * successfully by many, but despite that the algorithm itself is 
+       * not very sound when it comes to avalanche and permutation of the internal state. It has proven very good for small character keys, where it can outperform algorithms that result in a more random distribution:"
        * http://www.eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx
        */
       public int bernsteinHash(K key) {
@@ -225,6 +246,7 @@ public class MyHashTable<K, V> {
       }
 
       /**
+       * 
        * https://en.wikipedia.org/wiki/Jenkins_hash_function#one_at_a_time
        */
       public int joaat_hash(K k) {
@@ -239,7 +261,6 @@ public class MyHashTable<K, V> {
             hash += (hash << 0x3);
             hash ^= (hash >>> 0xB);
             hash += (hash << 0xF);
-            // hash = ((hash < 0) ? (hash % (myCapacity)) + myCapacity : hash) % myCapacity;
             return absHash(hash);
       }
 
