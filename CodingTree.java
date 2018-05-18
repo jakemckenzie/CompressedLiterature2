@@ -92,11 +92,9 @@ public class CodingTree {
         Map<String,String> decoder = new HashMap<String,String>();
         Collection<String> keys = codes.keySet();
         for (String k: keys) decoder.put(codes.get(k),k);
-
-        System.out.println(bits.length());
         for (int i = 0; i < bits.length(); i++) {
-            long sum = 0;
-            long z = System.nanoTime();
+            // long sum = 0;
+            // long z = System.nanoTime();
             //temp += (bits.charAt(i) == '1') ? '1' : '0';
             //System.out.println(i);
             if (bits.charAt(i) == '1') {
@@ -105,14 +103,13 @@ public class CodingTree {
                 temp.append('0');
             }
             if (decoder.get(temp.toString()) != null) {
-                out.append(decoder.get(temp));
-                temp = new StringBuilder();
+                out.append(decoder.get(temp.toString()));
                 temp.setLength(0);//faster than making a new object apparently?
                 //temp = "";
             }
-            long y = System.nanoTime();
-            sum+= (y-z);
-            if (i % 100000 == 0 )  System.out.println(sum);
+            // long y = System.nanoTime();
+            // sum+= (y-z);
+            // if (i % 100000 == 0 )  System.out.println(sum);
         }
         return out.toString();
     }

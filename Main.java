@@ -7,6 +7,17 @@ import java.util.regex.Pattern;
 
 /**
  * This is a joint project between Jake McKenzie and Bruce Baker.
+ * 
+ * For this assignment all the extra credit was complete to the assignment
+ * specifications. To run the extra credit it needs to be uncommented. The
+ * codes are being read in slightly incorrectly which causes the runtime to
+ * be slow on the decompression process but I have ran it and it does produce
+ * an exactly correct file according to the linux built in tool to compare txt
+ * files. If I use the variables in memory, which java says is exactly the same
+ * as codes and bits I read in from the compressed files, it runs quite quickly
+ * at 700ms.
+ * 
+ * The analysis of quadratic probing is included in this zip file.
  * @author Jake McKenzie and Bruce Baker
  */
 
@@ -15,8 +26,7 @@ public class Main {
     /**
      * @param WarAndPeace- This was the required text for compression. It is
      * a long text and showcases the compression technique well. I consider compression
-     * of this text to be the baseline to meet. If I can hit this then I will test on
-     * progressively harder texts to compress and decompress.
+     * of this text to be the baseline to meet.
      */
 
     private static final String WarAndPeace = "WarAndPeace.txt";
@@ -69,15 +79,14 @@ public class Main {
         System.out.println("Difference in compressed file sizes of my file vs the target: " + difference  + " bytes");
         
         
-        //Files.write(Paths.get(decompressed),decodes.decoded.getBytes());
         /**
-         * (2) Please comment out these functions to run tests
+         * (1) Please comment out these functions to run tests and extra credit
          */
-
+        
         
         //testMyHashTable();
         //testCodingTree();
-        runDecode();
+        //runDecode();
     }
 
     public static void testMyHashTable() {

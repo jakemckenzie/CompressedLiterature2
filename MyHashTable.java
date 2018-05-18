@@ -65,18 +65,15 @@ public class MyHashTable<K, V> {
        * @param newValue  the value to be associated
        */
       void put(K searchKey, V newValue) {
-            //int t = bernsteinHash(searchKey);
-            //int t = joaat_hash(searchKey);
-            int t = Fowler_Noll_Vo_hash(searchKey);           
-            //int t = hash(searchKey);
+            int t = runHashes(searchKey);
             int pos = (t < 0) ? (t % myCapacity) + myCapacity : t % myCapacity;
             int cycle = 0, i = 1, j = 1;
             while (cycle < myCapacity && myTable.get(pos) != null) {
                   if (myTable.get(pos).myKey.equals(searchKey)) {
                         break;
                   }
-                  pos = (pos + 1) % myCapacity;
-                  //pos = quadraticProbe(pos,i,j);
+                  //pos = (pos + 1) % myCapacity;
+                  pos = quadraticProbe(pos,i,j);
                   i++;
                   j++;
                   pos = absHash(pos);
@@ -96,10 +93,7 @@ public class MyHashTable<K, V> {
        * @param searchKey the key of the object
        */
       public V get(K searchKey) {
-            //int t = bernsteinHash(searchKey);
-            //int t = joaat_hash(searchKey);
-            int t = Fowler_Noll_Vo_hash(searchKey);
-            //int t = hash(searchKey);
+            int t = runHashes(searchKey);
             int pos = (t < 0) ? (t % myCapacity) + myCapacity : t % myCapacity;
             int cycle = 0, i = 1, j = 1;
             V temp;
@@ -107,8 +101,8 @@ public class MyHashTable<K, V> {
                   if (myTable.get(pos).myKey.equals(searchKey)) {
                         break;
                   } else {
-                        pos = (pos + 1) % myCapacity;
-                        //pos = quadraticProbe(pos,i,j);
+                        //pos = (pos + 1) % myCapacity;
+                        pos = quadraticProbe(pos,i,j);
                         i++;
                         j++;
                         pos = absHash(pos);
@@ -127,10 +121,7 @@ public class MyHashTable<K, V> {
        */
 
       public boolean containsKey(K searchKey) {
-            //int t = bernsteinHash(searchKey);
-            //int t = joaat_hash(searchKey);
-            int t = Fowler_Noll_Vo_hash(searchKey);
-            //int t = hash(searchKey);
+            int t = runHashes(searchKey);
             int pos = (t < 0) ? (t % myCapacity) + myCapacity : t % myCapacity;
             int cycle = 0;
             int i = 1, j = 1;
@@ -142,8 +133,8 @@ public class MyHashTable<K, V> {
                         found = true;
                         break;
                   } else {
-                        pos = (pos + 1) % myCapacity;
-                        //pos = quadraticProbe(pos,i,j);
+                        //pos = (pos + 1) % myCapacity;
+                        pos = quadraticProbe(pos,i,j);
                         i++;
                         j++;
                         pos = absHash(pos);
@@ -260,6 +251,12 @@ public class MyHashTable<K, V> {
             hash ^= (hash >>> 0xB);
             hash += (hash << 0xF);
             return absHash(hash);
+      }
+      public int runHashes(K searchKey){
+            //return bernsteinHash(searchKey);
+            //return joaat_hash(searchKey);
+            return Fowler_Noll_Vo_hash(searchKey);
+            //return hash(searchKey);
       }
 
       /**
