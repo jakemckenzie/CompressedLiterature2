@@ -190,6 +190,7 @@ public class MyHashTable<K, V> {
             System.out.println("Average Probe: " + ((double)sum) / myBuckets);
       }
       /**
+       * Java's built in hash function
        * @param key key for hashing
        */
       private int hash(K key) {
@@ -246,7 +247,11 @@ public class MyHashTable<K, V> {
       }
 
       /**
-       * 
+       * Bob Jenkins is a well known authority on designing hash functions 
+       * for table lookup. In fact, one of his hashes is considered state of 
+       * the art for lookup, which we will see shortly. A considerably simpler 
+       * algorithm of his design is the One-at-a-Time hash:
+       * http://www.eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx
        * https://en.wikipedia.org/wiki/Jenkins_hash_function#one_at_a_time
        */
       public int joaat_hash(K k) {
@@ -265,6 +270,13 @@ public class MyHashTable<K, V> {
       }
 
       /**
+       * "The FNV hash, short for Fowler/Noll/Vo in honor of the creators, is a very powerful algorithm
+       *  that, not surprisingly, follows the same lines as Bernstein's modified hash with carefully 
+       * chosen constants. This algorithm has been used in many applications with wonderful results, 
+       * and for its simplicity, the FNV hash should be one of the first hashes tried in an application. 
+       * It is also recommended that the FNV website be visited for useful descriptions of how to modify 
+       * the algorithm for various uses."
+       * http://www.eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx
        * https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
        */
       public int Fowler_Noll_Vo_hash(K key) {

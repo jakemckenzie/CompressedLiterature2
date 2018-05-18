@@ -16,7 +16,6 @@ import java.util.Map.Entry;
 
 /**
  * @author Jake McKenzie
- * @author Bruce Taiga Baker
  */
 public class CodingTree {
     /**
@@ -26,12 +25,21 @@ public class CodingTree {
      * @param message the message encoded by the huffman tree
      */
 
+    public CodingTree(String bits, MyHashTable<String,String> codes) {
+        decoded = decode(bits,codes);
+    }
+
     public CodingTree(String message) {
         codes = new MyHashTable<String,String>(32768);
         countStrings(message);
         buildHuffmanTree(queue);
         buildBinary(root,"");
         convertToBinary();
+
+        /**
+         * Please comment out to test decode
+         */
+
         //decoded = decode(bits,codes);
     }
     /**
@@ -151,6 +159,13 @@ public class CodingTree {
         for (byte b : bytes) frequency[b & 0xFF]++;
         return frequency;
     }
+
+    /**
+     * I used the book Java 9 Regular Expressions by Anubhava Srivastava
+     * to parse the novel war and peace. I have two regular expressions
+     * The first one works by splitting by every character NOT in the set:
+     * {a,...,z,A,...,Z,-,'} while the latter splits by that set.
+     */
     
     public void countStrings(String message) {
         String[] words = message.split("([^\\w\\Q-\\E\\Q'\\E])+");
