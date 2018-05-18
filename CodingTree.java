@@ -89,21 +89,24 @@ public class CodingTree {
         StringBuilder out = new StringBuilder();
         StringBuilder temp = new StringBuilder();
         //String temp = "";
-        //HuffmanNode decNode = root;
         Map<String,String> decoder = new HashMap<String,String>();
         Collection<String> keys = codes.keySet();
         for (String k: keys) decoder.put(codes.get(k),k);
+
+        System.out.println(bits.length());
         for (int i = 0; i < bits.length(); i++) {
-            //temp += (bits.charAt(i) == '1') ? '1' : '0';            
+            //temp += (bits.charAt(i) == '1') ? '1' : '0';
+            //System.out.println(i);
             if (bits.charAt(i) == '1') {
                 temp.append('1');
             } else {
                 temp.append('0');
             }
             if (decoder.get(temp.toString()) != null) {
-                out.append(decoder.get(temp.toString()));
-                //temp = new StringBuilder();
+                out.append(decoder.get(temp));
+                temp = new StringBuilder();
                 temp.setLength(0);//faster than making a new object apparently?
+                //temp = "";
             }
         }
         return out.toString();

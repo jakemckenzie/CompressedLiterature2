@@ -3,6 +3,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.*;
 import java.lang.*;
+import java.util.regex.Pattern;
 
 /**
  * This is a joint project between Jake McKenzie and Bruce Baker.
@@ -53,7 +54,6 @@ public class Main {
         System.out.println("Average byte length: " + ((double)sum)/c.strings.size());
         
         
-
         /**
          * (1) Please comment out to test decode
          */
@@ -67,13 +67,46 @@ public class Main {
         System.out.println("Compressed file size: " +  compressed / 1024 + " kilobytes");
         System.out.println("Target compressed file size: " +  targetCompressed / 1024  + " kilobytes");
         System.out.println("Difference in compressed file sizes of my file vs the target: " + difference  + " bytes");
-
-
+        
         
         //Files.write(Paths.get(decompressed),decodes.decoded.getBytes());
         /**
          * (2) Please comment out these functions to run tests
          */
+
+        long y = System.currentTimeMillis();
+        byte[] bytes = Files.readAllBytes(Paths.get("compressed.txt"));
+        byte[] smallerBytes = new byte[bytes.length - 2];
+        for (int i = 2; i < bytes.length;i++) smallerBytes[i-2] = bytes[i];
+        BitSet bits = BitSet.valueOf(bytes);
+        //http://www.exampledepot.8waytrips.com/egs/java.util/Bits2Array.html
+        //for (int i = 0; i < bytes.length * 8; i++) if ((bytes[bytes.length - i / 8 - 1] & (1 << (i % 8))) > 0) bits.set(i);
+        //https://stackoverflow.com/questions/38490760/how-to-print-bitset-as-series-of-bits
+        StringBuilder s = new StringBuilder();
+        for( int i = 0; i < bits.length();  i++) s.append(bits.get(i) == true ? 1 : 0);
+        String codesString = new String(Files.readAllBytes(Paths.get("codes.txt")));
+        //Files.write(Paths.get(decompressed),decodes.decoded.getBytes());
+        codesString = codesString.substring(1, codesString.length()-1);
+        //Pattern pattern = Pattern.compile(", ");
+        //String[] cds = pattern.split(codesString);
+        String[] cds = codesString.split("([\\Q, \\E])+");
+        String key = "", value = "";
+        MyHashTable<String,String> decodes = new MyHashTable<String,String>(1 << 15);
+        for (int i = 0; i < cds.length - 1; i++)  {
+            if (i % 2 == 0 && cds[i].charAt(0) == '(') {
+                key = cds[i].substring(1, cds[i].length());
+            } else if (i % 2 == 1 && cds[i].charAt(cds[i].length() - 1) == ')') {
+                value = cds[i].substring(0, cds[i].length()-1);
+                decodes.put(key,value);
+            }
+        }
+        CodingTree cTree4decoding = new CodingTree(s.toString() + "0",decodes);
+        Files.write(Paths.get("./decoded.txt"),decodes.toString().getBytes());
+        Files.write(Paths.get(decompressed),cTree4decoding.decoded.getBytes());
+        long z = System.currentTimeMillis();
+
+        System.out.println();
+        System.out.println(z - y + " milliseconds");
         //testMyHashTable();
         //testCodingTree();
         runDecode();
@@ -96,36 +129,7 @@ public class Main {
     }
 
     public static void runDecode() throws IOException{
-        long y = System.currentTimeMillis();
-        byte[] bytes = Files.readAllBytes(Paths.get("compressed.txt"));
-        byte[] smallerBytes = new byte[bytes.length - 2];
-        for (int i = 2; i < bytes.length;i++) smallerBytes[i-2] = bytes[i];
-        BitSet bits = BitSet.valueOf(bytes);
-        //http://www.exampledepot.8waytrips.com/egs/java.util/Bits2Array.html
-        //for (int i = 0; i < bytes.length * 8; i++) if ((bytes[bytes.length - i / 8 - 1] & (1 << (i % 8))) > 0) bits.set(i);
-        //https://stackoverflow.com/questions/38490760/how-to-print-bitset-as-series-of-bits
-        StringBuilder s = new StringBuilder();
-        for( int i = 0; i < bits.length();  i++) s.append(bits.get(i) == true ? 1 : 0);
-        String codesString = new String(Files.readAllBytes(Paths.get("codes.txt")));
-        //Files.write(Paths.get(decompressed),decodes.decoded.getBytes());
-        codesString = codesString.substring(1, codesString.length()-1);
-        String[] cds = codesString.split("([\\Q, \\E])+");
-        String key = "", value = "";
-        MyHashTable<String,String> decodes = new MyHashTable<String,String>(1 << 15);
-        for (int i = 0; i < cds.length - 1; i++)  {
-            if (i % 2 == 0) {
-                key = cds[i].substring(1, cds[i].length());
-            } else if (i % 2 == 1) {
-                value = cds[i].substring(0, cds[i].length()-1);
-                decodes.put(key,value);
-            }
-        }
-        CodingTree cTree4decoding = new CodingTree(s.toString(),decodes);
-        Files.write(Paths.get(decompressed),cTree4decoding.decoded.getBytes());
-        long z = System.currentTimeMillis();
-
-        System.out.println();
-        System.out.println(z - y + " milliseconds");
+        
     }
 
 }
