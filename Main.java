@@ -55,18 +55,22 @@ public class Main {
         Files.write(Paths.get(compressed), bs.toByteArray());
         long b = System.currentTimeMillis();
         System.out.println("Runtime: " + (b - a) + " milliseconds");
+        int sum = 0;
+        for (String i : c.strings) sum+= i.getBytes().length;
+        System.out.println("Average byte length: " + ((double)sum)/c.strings.size());
         //Files.write(Paths.get(decompressed),c.decoded.getBytes());
 
         double compressed = Files.size(Paths.get("compressed.txt"));
         double targetCompressed = Files.size(Paths.get("targetCompressed.txt"));
         double difference = (targetCompressed - compressed);
 
-        System.out.println("Compressed file size: " +  compressed + " bytes");
-        System.out.println("Target compressed file size: " +  targetCompressed  + " bytes");
+        System.out.println("Compressed file size: " +  compressed / 1024 + " kilobytes");
+        System.out.println("Target compressed file size: " +  targetCompressed / 1024  + " kilobytes");
         System.out.println("Difference in compressed file sizes of my file vs the target: " + difference  + " bytes");
 
 
-        //testMyHashTable();
+        testMyHashTable();
+        testCodingTree();
     }
 
     public static void testMyHashTable() {
@@ -76,6 +80,57 @@ public class Main {
         System.out.println(temp.get("yes") + temp.get("No"));
         temp.put("yes", "What do you mean");
         System.out.println(temp);
+    }
+
+    public static void testCodingTree() throws IOException{
+        String message1 = new String(Files.readAllBytes(Paths.get("Conan_Beyond_the_Black_River.txt")));
+        CodingTree testCodingTree1 = new CodingTree(message1);
+        System.out.println(testCodingTree1.codes.toString());
+
+    }
+
+    /**
+     * This was used for testing purposes. When I read about the huffman compression
+     * entropy kept coming up so I decided to see what the entropy of the files were that
+     * I collected for testing. I encluded the entropy of each above in the comments of their file names. 
+     * 
+     * https://courses.cs.washington.edu/courses/csep521/99sp/lectures/lecture11/sld020.htm
+     */
+    public static double getEntropy(String s){
+        double entropy = 0.0d;
+        double probability;
+        final int[] frequency = new int[256];
+        for (byte b : s.getBytes()) frequency[b & 0xFF]++;
+        //Claude Shannon - The theory of information
+        for (int f:frequency) {
+           probability = (double)f / s.length();
+           if (f != 0) entropy -= (probability) * log2(probability);
+        }
+        return entropy;
+    }
+    
+    public static double log2(double n) {
+        return Math.log(n) / Math.log(2);
+    }
+
+    /**
+     * pg 9 of Maxime Crochemore's Algorithms on Strings. 
+     * 
+     * fibonacciStrings(1)    1   b
+     * fibonacciStrings(2)    1   a
+     * fibonacciStrings(3)    2   ab
+     * fibonacciStrings(4)    3   aba
+     * fibonacciStrings(5)    5   abaab
+     * fibonacciStrings(6)    8   abaababa
+     * fibonacciStrings(7)    13  abaababaabaab
+     * fibonacciStrings(8)    21  abaababaabaababaababa
+     * fibonacciStrings(9)    34  abaababaabaababaababaabaababaabaab
+     * 
+     * The lengths of the strings are exactly the same length as the sequence of fibonacci numbers ie Fn = |fibonacciStrings(n)|
+     * yet it has many repeats. This makes it good, in my opinion, for testing purposes
+     */
+    public static String fibonacciStrings(int N){
+        return (N == 0) ? "b" : (N == 1) ? "a" : fibonacciStrings(N - 1) + fibonacciStrings(N - 2);
     }
 
     public static void testMain() throws IOException {

@@ -33,7 +33,9 @@ public class MyHashTable<K, V> {
        * @param largestProbe the largest probe 
        */
       int largestProbe;
-
+      /**
+       * @param squaresLookup the first 25 squares used as a lookup
+       */
       int[] squaresLookup = {1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225, 256, 289, 324, 361, 400, 441, 484, 529, 576, 625};
 
       public ArrayList<Integer> histogram;
@@ -50,7 +52,7 @@ public class MyHashTable<K, V> {
             myBuckets = 0;
             probingCount = 0;
             largestProbe = 0;
-            myCapacity = capacity;
+            myCapacity = capacity;//
       }
 
       /**
@@ -92,7 +94,7 @@ public class MyHashTable<K, V> {
             int t = Fowler_Noll_Vo_hash(searchKey);
             //int t = hash(searchKey);
             int pos = (t < 0) ? (t % myCapacity) + myCapacity : t % myCapacity;
-            int cycle = 0, i = 0, j = 0;
+            int cycle = 0, i = 1, j = 1;
             V temp;
             while (cycle < myCapacity) {
                   if (myTable.get(pos).myKey.equals(searchKey)) {
@@ -145,7 +147,7 @@ public class MyHashTable<K, V> {
       }
 
       public int quadraticProbe(int pos, int i, int j) {
-            return (i > 25) ? (pos + (int)Math.pow(i,j)) % myCapacity : (pos + squaresLookup[i]) % myCapacity;
+            return (i > 25) ? (pos + (int)Math.pow(i,j)) % myCapacity : (pos + squaresLookup[i - 1]) % myCapacity;
       }
       /**
         * Returns a hashset of all key values
@@ -168,10 +170,10 @@ public class MyHashTable<K, V> {
             System.out.println("Histogram of Probes: " + Arrays.toString(probeCount));
             double fill = ((double) myBuckets) / myCapacity;
             System.out.println("Fill Percentage: " + fill);
-            System.out.println("Max Linear Probe: " + largestProbe);
+            System.out.println("Max Probe: " + largestProbe);
             long sum = 0;
             for (int i = 1; i < probeCount.length;i++) sum += i*probeCount[i];
-            System.out.println("Average Linear Probe: " + ((double)sum) / myBuckets);
+            System.out.println("Average Probe: " + ((double)sum) / myBuckets);
       }
 
       private int hash(K key) {
@@ -181,25 +183,32 @@ public class MyHashTable<K, V> {
 
       public String toString() {
             StringBuilder temp = new StringBuilder();
-            temp.append("{");
+            temp.append("[");
             int i = 0;
             int bucketCount = 0;
-            for (i = 0; i < myCapacity; i++) {
+            for (i = 0; i < myCapacity - 1; i++) {
+                  
                   if (myTable.get(i) != null) {
+                        temp.append("(");
                         if (bucketCount == 0) {
                               temp.append(myTable.get(i).myKey);
-                              temp.append("=");
+                              temp.append(", ");
                               temp.append(myTable.get(i).myValue);
                         } else {
-                              temp.append(", ");
+                              
                               temp.append(myTable.get(i).myKey);
-                              temp.append("=");
+                              temp.append(", ");
                               temp.append(myTable.get(i).myValue);
                         }
+                        temp.append(")");
+                        temp.append(", ");
                         bucketCount++;
                   }
+                  
             }
-            temp.append("}");
+            temp.deleteCharAt(temp.lastIndexOf(","));
+            temp.deleteCharAt(temp.lastIndexOf(" "));
+            temp.append("]");
             return temp.toString();
       }
 
@@ -244,10 +253,10 @@ public class MyHashTable<K, V> {
             for (int i = 0; i < data.length(); i++) hash = (hash ^ data.charAt(i)) * p;
             hash ^= hash << 13;
             hash += hash >> 7;
-            hash ^= hash << 9;
+            hash ^= hash << 3;
             hash += hash >> 13;
             hash ^= hash << 5;
-
+            
             // hash += hash << 13;
             // hash ^= hash >> 19;
             // hash ^= hash >> 17;
@@ -256,7 +265,9 @@ public class MyHashTable<K, V> {
 
             return absHash(hash);
       }
-
+      /**
+       * Used for testing purposes.
+       */
       private ArrayList<Integer> noRepeatShuffleList(int size) {
             ArrayList<Integer> arr = new ArrayList<>(size);
             for (int i = 0; i < size; i++) arr.add(i);

@@ -68,7 +68,7 @@ public class CodingTree {
      * @param queue the priority queue for the huffman tree
      */
     
-     public PriorityQueue<HuffmanNode> queue = new PriorityQueue<HuffmanNode>();
+     public MyPriorityQueue<HuffmanNode> queue = new MyPriorityQueue<HuffmanNode>();
     
      /**
      * ******************************EXTRA CREDIT**************************** 
@@ -105,7 +105,7 @@ public class CodingTree {
      * @param queue A priority queue of huffman nodes
      */
     
-     public void buildHuffmanTree(PriorityQueue<HuffmanNode> queue) {
+     public void buildHuffmanTree(MyPriorityQueue<HuffmanNode> queue) {
         do{queue.offer(new HuffmanNode(queue.poll(),queue.poll()));} while (queue.size() > 1);
         root = queue.poll();
     }
