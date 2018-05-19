@@ -199,11 +199,18 @@ public class CodingTree {
                 } 
             }
         }
-        TreeMap<String,Integer> tm = new TreeMap<String,Integer>();
+        MyHashTable<String,Integer> ht = new MyHashTable<String,Integer>(1<<15);
         for (String i : strings) {
-            Integer j = tm.get(i);
-            tm.put(i,j == null ? 1 : j + 1);
+            Integer j;
+            if (ht.containsKey((String)i) == true) {
+                j = ht.get((String)i);
+                ht.put(i, new Integer(j+ 1));
+            } else {
+                ht.put(i, 1);
+            }
+            
         }
-        for (Map.Entry<String,Integer> m : tm.entrySet()) queue.offer(new HuffmanNode(m.getKey(),m.getValue()));
+        Collection<String> keys = ht.keySet();
+        for (String k: keys) queue.offer(new HuffmanNode(k,ht.get(k)));
     }
 }

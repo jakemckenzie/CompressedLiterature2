@@ -69,11 +69,12 @@ public class MyHashTable<K, V> {
             int pos = (t < 0) ? (t % myCapacity) + myCapacity : t % myCapacity;
             int cycle = 0, i = 1, j = 1;
             while (cycle < myCapacity && myTable.get(pos) != null) {
-                  if (myTable.get(pos).myKey.equals(searchKey)) {
+                  if ((myTable.get(pos).myKey).equals(searchKey)) {
+                        myBuckets--;
                         break;
                   }
-                  //pos = (pos + 1) % myCapacity;
-                  pos = quadraticProbe(pos,i,j);
+                  pos = (pos + 1) % myCapacity;
+                  //pos = quadraticProbe(pos,i,j);
                   i++;
                   j++;
                   pos = absHash(pos);
@@ -99,10 +100,11 @@ public class MyHashTable<K, V> {
             V temp;
             while (cycle < myCapacity) {
                   if (myTable.get(pos).myKey.equals(searchKey)) {
+                        //return null;
                         break;
                   } else {
-                        //pos = (pos + 1) % myCapacity;
-                        pos = quadraticProbe(pos,i,j);
+                        pos = (pos + 1) % myCapacity;
+                        //pos = quadraticProbe(pos,i,j);
                         i++;
                         j++;
                         pos = absHash(pos);
@@ -133,8 +135,8 @@ public class MyHashTable<K, V> {
                         found = true;
                         break;
                   } else {
-                        //pos = (pos + 1) % myCapacity;
-                        pos = quadraticProbe(pos,i,j);
+                        pos = (pos + 1) % myCapacity;
+                        //pos = quadraticProbe(pos,i,j);
                         i++;
                         j++;
                         pos = absHash(pos);
